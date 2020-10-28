@@ -300,9 +300,9 @@ Public Function Execute(ByVal Request As WebRequest) As WebResponse
 #Else
     Set web_Http = Me.PrepareHttpRequest(Request)
 
-    web_Http.send Request.Body
-    Do While Not web_Http.waitForResponse(0.025)
-        VBA.DoEvents
+    web_Http.Send Request.Body
+    Do While Not web_Http.WaitForResponse(0.025)
+        DoEvents
     Loop
 
     web_Response.CreateFromHttp Me, Request, web_Http
@@ -338,7 +338,7 @@ web_ErrorHandling:
     Case Else
         ' Error
         web_ErrorDescription = "An error occurred during execute" & vbNewLine & _
-            Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description
+            Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description
 
         WebHelpers.LogError web_ErrorDescription, "WebClient.Execute", 11011 + vbObjectError
         Err.Raise 11011 + vbObjectError, "WebClient.Execute", web_ErrorDescription
@@ -429,7 +429,7 @@ Public Function PostJson(ByVal Url As String, ByRef Body As Variant, Optional By
     web_Request.Resource = Url
     web_Request.Format = WebFormat.Json
     web_Request.Method = WebMethod.HttpPost
-    If VBA.IsObject(Body) Then
+    If IsObject(Body) Then
         Set web_Request.Body = Body
     Else
         web_Request.Body = Body
@@ -505,7 +505,7 @@ Public Function PrepareHttpRequest(ByVal Request As WebRequest, Optional ByRef A
     web_Http.Open WebHelpers.MethodToName(Request.Method), Me.GetFullUrl(Request), Async
 
     ' Set timeouts
-    web_Http.setTimeouts Me.TimeoutMs, Me.TimeoutMs, Me.TimeoutMs, Me.TimeoutMs
+    web_Http.SetTimeouts Me.TimeoutMs, Me.TimeoutMs, Me.TimeoutMs, Me.TimeoutMs
 
     ' Load auto-proxy (if needed)
     If Me.EnableAutoProxy Then
@@ -555,11 +555,11 @@ Public Function PrepareHttpRequest(ByVal Request As WebRequest, Optional ByRef A
 
     ' Set headers on http request (after open)
     For Each web_KeyValue In Request.Headers
-        web_Http.setRequestHeader web_KeyValue.Item("Key"), web_KeyValue.Item("Value")
+        web_Http.SetRequestHeader web_KeyValue.Item("Key"), web_KeyValue.Item("Value")
     Next web_KeyValue
 
     For Each web_KeyValue In Request.Cookies
-        web_Http.setRequestHeader "Cookie", web_KeyValue.Item("Key") & "=" & web_KeyValue.Item("Value")
+        web_Http.SetRequestHeader "Cookie", web_KeyValue.Item("Key") & "=" & web_KeyValue.Item("Value")
     Next web_KeyValue
 
     ' Give authenticator opportunity to update Http
@@ -577,7 +577,7 @@ web_ErrorHandling:
     Set web_Http = Nothing
     Err.Raise 11012 + vbObjectError, "WebClient.PrepareHttpRequest", _
         "An error occurred while preparing http request" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description
+        Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description
 End Function
 
 ''
@@ -664,7 +664,7 @@ web_ErrorHandling:
 
     Err.Raise 11013 + vbObjectError, "WebClient.PrepareCURLRequest", _
         "An error occurred while preparing cURL request" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description
+        Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description
 End Function
 
 ''
@@ -711,7 +711,7 @@ Private Sub web_LoadAutoProxy(ByVal web_Request As WebRequest)
     Dim web_ProxyBypassList As String
 
     Set web_Parts = WebHelpers.GetUrlParts(Me.GetFullUrl(web_Request))
-    web_Domain = VBA.IIf(web_Parts.Item("Protocol") <> vbNullString, web_Parts.Item("Protocol") & "://", vbNullString) & _
+    web_Domain = IIf(web_Parts.Item("Protocol") <> vbNullString, web_Parts.Item("Protocol") & "://", vbNullString) & _
         web_Parts.Item("Host") & ":" & web_Parts.Item("Port")
 
     ' Cache auto-proxy by domain
@@ -736,7 +736,7 @@ Private Sub web_LoadAutoProxy(ByVal web_Request As WebRequest)
 web_ErrorHandling:
 
     WebHelpers.LogError "An error occurred while loading auto-proxy" & vbNewLine & _
-        Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description, _
+        Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": " & Err.Description, _
         "WebClient.LoadAutoProxy", Err.Number
 #End If
 End Sub

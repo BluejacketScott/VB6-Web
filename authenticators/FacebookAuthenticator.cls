@@ -181,7 +181,7 @@ auth_ErrorHandling:
     If Err.Number <> 0 Then
         If Err.Number - vbObjectError <> 11040 Then
             auth_ErrorDescription = auth_ErrorDescription & _
-                Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+                Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
         End If
             
         auth_ErrorDescription = auth_ErrorDescription & Err.Description
@@ -264,7 +264,7 @@ Public Sub AddScope(ByVal Scope As String)
     
     ' Prepare scopes array
     auth_Scopes = Me.Scopes
-    If VBA.IsEmpty(auth_Scopes) Then
+    If IsEmpty(auth_Scopes) Then
         ReDim auth_Scopes(0 To 0)
     Else
         ReDim Preserve auth_Scopes(0 To UBound(auth_Scopes) + 1)
@@ -327,7 +327,7 @@ auth_Cleanup:
         auth_ErrorDescription = "An error occurred while retrieving token." & vbNewLine
         If Err.Number - vbObjectError <> 11041 Then
             auth_ErrorDescription = auth_ErrorDescription & _
-                Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+                Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
         End If
         auth_ErrorDescription = auth_ErrorDescription & Err.Description
     
@@ -350,7 +350,7 @@ Public Function GetLoginUrl() As String
     auth_Request.AddQuerystringParam "client_id", Me.ApplicationId
     auth_Request.AddQuerystringParam "redirect_uri", auth_RedirectUrl
     auth_Request.AddQuerystringParam "response_type", "code token"
-    auth_Request.AddQuerystringParam "scope", VBA.Join(Me.Scopes, ",")
+    auth_Request.AddQuerystringParam "scope", Join(Me.Scopes, ",")
     
     GetLoginUrl = auth_Request.FormattedResource
     Set auth_Request = Nothing
@@ -371,33 +371,33 @@ End Function
 Private Function auth_LoginIsApproval(ByVal auth_IE As Object) As Boolean
     Dim auth_UrlParts As Dictionary
 
-    If VBA.InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
+    If InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
         Set auth_UrlParts = WebHelpers.GetUrlParts(auth_IE.LocationURL)
         
-        If VBA.InStr(1, auth_UrlParts.Item("Hash"), "code") > 0 Or VBA.InStr(1, auth_UrlParts.Item("Hash"), "token") > 0 Then
+        If InStr(1, auth_UrlParts.Item("Hash"), "code") > 0 Or InStr(1, auth_UrlParts.Item("Hash"), "token") > 0 Then
             auth_LoginIsApproval = True
         End If
     End If
 End Function
 
 Private Function auth_LoginIsDenied(ByVal auth_IE As Object) As Boolean
-    If VBA.InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
-        If VBA.InStr(1, WebHelpers.GetUrlParts(auth_IE.LocationURL).Item("Querystring"), "error=access_denied") > 0 Then
+    If InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
+        If InStr(1, WebHelpers.GetUrlParts(auth_IE.LocationURL).Item("Querystring"), "error=access_denied") > 0 Then
             auth_LoginIsDenied = True
         End If
     End If
 End Function
 
 Private Function auth_LoginIsError(ByVal auth_IE As Object) As Boolean
-    If VBA.InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
-        If VBA.InStr(1, WebHelpers.GetUrlParts(auth_IE.LocationURL).Item("Querystring"), "error") > 0 Then
+    If InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
+        If InStr(1, WebHelpers.GetUrlParts(auth_IE.LocationURL).Item("Querystring"), "error") > 0 Then
             auth_LoginIsError = True
         End If
-    ElseIf VBA.InStr(1, auth_IE.LocationURL, auth_AuthorizationUrl) > 0 Then
+    ElseIf InStr(1, auth_IE.LocationURL, auth_AuthorizationUrl) > 0 Then
         ' There are minimal distinguishing marks for errors,
         ' Look for Warning without Cancel Okay of confirmation prompt
         ' TODO Find less brittle approach
-        If VBA.InStr(1, auth_IE.Document.Body.innerText, "Warning") > 0 And Not VBA.InStr(1, auth_IE.Document.Body.innerText, "CancelOkay") > 0 Then
+        If InStr(1, auth_IE.Document.Body.innerText, "Warning") > 0 And Not InStr(1, auth_IE.Document.Body.innerText, "CancelOkay") > 0 Then
             auth_LoginIsError = True
         End If
     End If
@@ -424,7 +424,7 @@ auth_ErrorHandling:
     auth_ErrorDescription = "An error occurred while parsing authorization code." & vbNewLine
     If Err.Number - vbObjectError <> 11042 Then
         auth_ErrorDescription = auth_ErrorDescription & _
-            Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+            Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
     End If
     auth_ErrorDescription = auth_ErrorDescription & Err.Description
 
@@ -435,12 +435,12 @@ End Function
 Private Function auth_LoginExtractError(ByVal auth_IE As Object) As String
     On Error GoTo auth_ErrorHandling
     
-    If VBA.InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
+    If InStr(1, auth_IE.LocationURL, auth_RedirectUrl) > 0 Then
         Dim auth_QuerystringParts() As String
         
-        auth_QuerystringParts = VBA.Split(WebHelpers.GetUrlParts(auth_IE.LocationURL).Item("Querystring"), "&")
-        auth_LoginExtractError = VBA.Replace(VBA.Join(auth_QuerystringParts, vbNewLine), "=", ": ")
-    ElseIf VBA.InStr(1, auth_IE.LocationURL, auth_AuthorizationUrl) > 0 Then
+        auth_QuerystringParts = Split(WebHelpers.GetUrlParts(auth_IE.LocationURL).Item("Querystring"), "&")
+        auth_LoginExtractError = Replace(Join(auth_QuerystringParts, vbNewLine), "=", ": ")
+    ElseIf InStr(1, auth_IE.LocationURL, auth_AuthorizationUrl) > 0 Then
         auth_LoginExtractError = auth_IE.Document.Body.FirstChild.innerText
     End If
     

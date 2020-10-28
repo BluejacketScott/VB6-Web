@@ -161,7 +161,7 @@ Public Sub Login()
         Err.Raise 11040 + vbObjectError, "OAuthDialog", "Unable to open browser"
     End If
     
-    auth_Response = VBA.InputBox("Opening Google Login..." & vbNewLine & vbNewLine & _
+    auth_Response = InputBox("Opening Google Login..." & vbNewLine & vbNewLine & _
         "After you've logged in, copy the code from the browser and paste it here to authorize this application", _
         Title:="Logging in...")
     
@@ -221,7 +221,7 @@ auth_ErrorHandling:
     If Err.Number <> 0 Then
         If Err.Number - vbObjectError <> 11040 Then
             auth_ErrorDescription = auth_ErrorDescription & _
-                Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+                Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
         End If
     Else
         auth_ErrorDescription = auth_ErrorDescription & "Login did not complete"
@@ -257,14 +257,14 @@ Public Sub AddScope(ByRef Scope As String)
     
     ' Prepare scopes array
     auth_Scopes = Me.Scopes
-    If VBA.IsEmpty(auth_Scopes) Then
+    If IsEmpty(auth_Scopes) Then
         ReDim auth_Scopes(0 To 0)
     Else
         ReDim Preserve auth_Scopes(0 To UBound(auth_Scopes) + 1)
     End If
     
     ' Add standard domain if it hasn't been set
-    If VBA.Left$(Scope, 4) <> "http" And Not VBA.InStr(1, Scope, "://") Then
+    If Left$(Scope, 4) <> "http" And Not InStr(1, Scope, "://") Then
         Scope = "https://www.googleapis.com/auth/" & Scope
     End If
     
@@ -382,7 +382,7 @@ auth_Cleanup:
         auth_ErrorDescription = "An error occurred while retrieving token." & vbNewLine
         If Err.Number - vbObjectError <> 11041 Then
             auth_ErrorDescription = auth_ErrorDescription & _
-                Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+                Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
         End If
         auth_ErrorDescription = auth_ErrorDescription & Err.Description
     
@@ -408,8 +408,8 @@ Public Function GetLoginUrl() As String
     auth_Request.AddQuerystringParam "access_type", "offline"
     auth_Request.AddQuerystringParam "approval_prompt", "force"
     
-    If Not VBA.IsEmpty(Me.Scopes) Then
-        auth_Request.AddQuerystringParam "scope", VBA.Join(Me.Scopes, " ")
+    If Not IsEmpty(Me.Scopes) Then
+        auth_Request.AddQuerystringParam "scope", Join(Me.Scopes, " ")
     Else
         auth_Request.AddQuerystringParam "scope", vbNullString
     End If
@@ -440,7 +440,7 @@ Private Function auth_LoginIsDenied(ByVal auth_IE As Object) As Boolean
 
     If auth_LoginIsApproval(auth_IE) Then
         For Each auth_Element In auth_IE.Document.Body.All
-            If VBA.UCase(auth_Element.NodeName) = "P" And auth_Element.Id = "access_denied" Then
+            If UCase(auth_Element.NodeName) = "P" And auth_Element.Id = "access_denied" Then
                 auth_LoginIsDenied = True
                 Exit Function
             End If
@@ -458,7 +458,7 @@ Private Function auth_LoginExtractCode(ByVal auth_IE As Object) As String
     If auth_LoginIsApproval(auth_IE) Then
         ' Extract authorization code
         For Each auth_Element In auth_IE.Document.Body.All
-            If VBA.UCase(auth_Element.NodeName) = "INPUT" Then
+            If UCase(auth_Element.NodeName) = "INPUT" Then
                 auth_LoginExtractCode = auth_Element.DefaultValue
                 Exit Function
             End If

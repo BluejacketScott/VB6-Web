@@ -115,7 +115,13 @@ Public Property Let Web_pCustomResponseFormat(ByVal value As String)
 End Property
 
 Public Property Get Web_pBody() As Variant
-    Set Web_pBody = this.Web_pBody
+    If Not IsEmpty(this.Web_pBody) Then
+        If VarType(this.Web_pBody) = vbString Then
+            Web_pBody = this.Web_pBody
+        Else
+            Set Web_pBody = this.Web_pBody
+        End If
+    End If
 End Property
 
 Public Property Let Web_pBody(ByVal value As Variant)
@@ -127,7 +133,9 @@ Public Property Set Web_pBody(ByVal value As Variant)
 End Property
 
 Public Property Get Web_pConvertedBody() As Variant
-    Set Web_pConvertedBody = this.Web_pConvertedBody
+    If Not IsEmpty(this.Web_pConvertedBody) Then
+        Set Web_pConvertedBody = this.Web_pConvertedBody
+    End If
 End Property
 
 Public Property Let Web_pConvertedBody(ByVal value As Variant)
@@ -519,15 +527,15 @@ End Property
 ' @type String|Array|Collection|Dictionary|Variant
 ''
 Public Property Get Body() As Variant
-    If Not VBA.IsEmpty(Web_pBody) Then
-        If VBA.VarType(Web_pBody) = vbString Then
+    If Not IsEmpty(Web_pBody) Then
+        If VarType(Web_pBody) = vbString Then
             Body = Web_pBody
         ElseIf IsEmpty(Web_pConvertedBody) Then
             ' Convert body and cache
-            Body = WebHelpers.ConvertToFormat(Web_pBody, Me.RequestFormat, Me.CustomRequestFormat)
-            Web_pConvertedBody = Body
+            Set Body = WebHelpers.ConvertToFormat(Web_pBody, Me.RequestFormat, Me.CustomRequestFormat)
+            Set Web_pConvertedBody = Body
         Else
-            Body = Web_pConvertedBody
+            Set Body = Web_pConvertedBody
         End If
     End If
 End Property
@@ -564,12 +572,12 @@ Public Property Get FormattedResource() As String
 
     ' Replace url segments
     For Each web_Segment In Me.UrlSegments.Keys
-        FormattedResource = VBA.Replace(FormattedResource, "{" & web_Segment & "}", WebHelpers.UrlEncode(Me.UrlSegments.Item(web_Segment)))
+        FormattedResource = Replace(FormattedResource, "{" & web_Segment & "}", WebHelpers.UrlEncode(Me.UrlSegments.Item(web_Segment)))
     Next web_Segment
 
     ' Add querystring
     If Me.QuerystringParams.Count > 0 Then
-        If VBA.InStr(FormattedResource, "?") <= 0 Then
+        If InStr(FormattedResource, "?") <= 0 Then
             FormattedResource = FormattedResource & "?"
         Else
             FormattedResource = FormattedResource & "&"
@@ -755,7 +763,7 @@ End Sub
 ' @throws 11020 / 80042b0c / -2147210484 - Cannot add body parameter to non-Dictionary
 ''
 Public Sub AddBodyParameter(ByRef Key As Variant, ByRef value As Variant)
-    If VBA.IsEmpty(Web_pBody) Then
+    If IsEmpty(Web_pBody) Then
         Set Web_pBody = New Dictionary
     ElseIf Not TypeOf Web_pBody Is Dictionary Then
         Dim web_ErrorDescription As String
@@ -765,7 +773,7 @@ Public Sub AddBodyParameter(ByRef Key As Variant, ByRef value As Variant)
         Err.Raise 11020 + vbObjectError, "WebRequest.AddBodyParameter", web_ErrorDescription
     End If
 
-    If VBA.IsObject(value) Then
+    If IsObject(value) Then
         Set Web_pBody(Key) = value
     Else
         Web_pBody(Key) = value
@@ -788,7 +796,7 @@ Public Sub Prepare()
     SetHeader "Accept-Encoding", Me.AcceptEncoding
     If Me.Method <> WebMethod.HttpGet Or Me.ContentLength > 0 Then
         SetHeader "Content-Type", Me.ContentType
-        SetHeader "Content-Length", VBA.CStr(Me.ContentLength)
+        SetHeader "Content-Length", CStr(Me.ContentLength)
     End If
 End Sub
 
@@ -819,7 +827,7 @@ Public Function Clone() As WebRequest
     Set Clone.UrlSegments = WebHelpers.CloneDictionary(Me.UrlSegments)
     Set Clone.Cookies = WebHelpers.CloneCollection(Me.Cookies)
 
-    If VBA.IsObject(Web_pBody) Then
+    If IsObject(Web_pBody) Then
         Set Clone.Body = Web_pBody
     Else
         Clone.Body = Web_pBody
@@ -865,8 +873,8 @@ Private Function web_EncodeCookieName(ByRef web_CookieName As Variant) As String
     Dim web_CookieVal As String
     Dim web_StringLen As Long
 
-    web_CookieVal = VBA.CStr(web_CookieName)
-    web_StringLen = VBA.Len(web_CookieVal)
+    web_CookieVal = CStr(web_CookieName)
+    web_StringLen = Len(web_CookieVal)
 
     If web_StringLen > 0 Then
         Dim web_Result() As String
@@ -881,8 +889,8 @@ Private Function web_EncodeCookieName(ByRef web_CookieName As Variant) As String
         ' Loop through string characters
         For web_i = 1 To web_StringLen
             ' Get character and ascii code
-            web_Char = VBA.Mid$(web_CookieVal, web_i, 1)
-            web_CharCode = VBA.Asc(web_Char)
+            web_Char = Mid$(web_CookieVal, web_i, 1)
+            web_CharCode = Asc(web_Char)
 
             Select Case web_CharCode
                 Case 65 To 90, 97 To 122
@@ -896,13 +904,13 @@ Private Function web_EncodeCookieName(ByRef web_CookieName As Variant) As String
                     web_Result(web_i) = web_Char
 
                 Case 0 To 15
-                    web_Result(web_i) = "%0" & VBA.Hex(web_CharCode)
+                    web_Result(web_i) = "%0" & Hex(web_CharCode)
                 Case Else
-                    web_Result(web_i) = "%" & VBA.Hex(web_CharCode)
+                    web_Result(web_i) = "%" & Hex(web_CharCode)
             End Select
         Next web_i
 
-        web_EncodeCookieName = VBA.Join$(web_Result, vbNullString)
+        web_EncodeCookieName = Join$(web_Result, vbNullString)
     End If
 End Function
 

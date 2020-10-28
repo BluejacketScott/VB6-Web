@@ -210,7 +210,7 @@ auth_Cleanup:
         auth_ErrorDescription = "An error occurred while retrieving token." & vbNewLine
         If Err.Number - vbObjectError <> 11041 Then
             auth_ErrorDescription = auth_ErrorDescription & _
-                Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+                Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
         End If
         auth_ErrorDescription = auth_ErrorDescription & Err.Description
     

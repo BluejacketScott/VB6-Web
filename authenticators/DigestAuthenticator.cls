@@ -219,23 +219,23 @@ Public Sub ExtractAuthenticateInformation(ByVal Response As WebResponse)
     Dim web_CrLf As String
     
     auth_Header = WebHelpers.FindInKeyValues(Response.Headers, "WWW-Authenticate")
-    web_CrLf = VBA.Chr$(13) & VBA.Chr$(10)
+    web_CrLf = Chr$(13) & Chr$(10)
     
-    If auth_Header <> vbNullString And VBA.Left$(auth_Header, 6) = "Digest" Then
+    If auth_Header <> vbNullString And Left$(auth_Header, 6) = "Digest" Then
         Dim auth_Lines As Variant
-        auth_Lines = VBA.Split(VBA.Mid$(auth_Header, 7), web_CrLf)
+        auth_Lines = Split(Mid$(auth_Header, 7), web_CrLf)
         
         Dim auth_i As Long
         Dim auth_Key As String
         Dim auth_Value As String
         For auth_i = LBound(auth_Lines) To UBound(auth_Lines)
-            auth_Key = VBA.LCase$(VBA.Trim$(VBA.Mid$(auth_Lines(auth_i), 1, VBA.InStr(1, auth_Lines(auth_i), "=") - 1)))
-            auth_Value = VBA.Trim$(VBA.Mid$(auth_Lines(auth_i), VBA.InStr(1, auth_Lines(auth_i), "=") + 1, VBA.Len(auth_Lines(auth_i))))
+            auth_Key = LCase$(Trim$(Mid$(auth_Lines(auth_i), 1, InStr(1, auth_Lines(auth_i), "=") - 1)))
+            auth_Value = Trim$(Mid$(auth_Lines(auth_i), InStr(1, auth_Lines(auth_i), "=") + 1, Len(auth_Lines(auth_i))))
             
             ' Remove quotes and trailing comma
-            auth_Value = VBA.Replace(auth_Value, """", vbNullString)
-            If VBA.Right$(auth_Value, 1) = "," Then
-                auth_Value = VBA.Left$(auth_Value, VBA.Len(auth_Value) - 1)
+            auth_Value = Replace(auth_Value, """", vbNullString)
+            If Right$(auth_Value, 1) = "," Then
+                auth_Value = Left$(auth_Value, Len(auth_Value) - 1)
             End If
             
             ' Find realm, nonce, and opaque

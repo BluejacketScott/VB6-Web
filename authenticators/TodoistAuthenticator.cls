@@ -166,7 +166,7 @@ Public Sub Login()
     Dim auth_Response As String
     auth_Completed = True
 
-    auth_Response = VBA.InputBox("To login to Todoist, insert your API token from" & vbNewLine & _
+    auth_Response = InputBox("To login to Todoist, insert your API token from" & vbNewLine & _
         "todoist.com > Settings > Todoist Settings > Account > API token", _
         Title:="Insert Todoist API Token")
 
@@ -223,7 +223,7 @@ auth_ErrorHandling:
     If Err.Number <> 0 Then
         If Err.Number - vbObjectError <> 11040 Then
             auth_ErrorDescription = auth_ErrorDescription & _
-                Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+                Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
         End If
     Else
         auth_ErrorDescription = auth_ErrorDescription & "Login did not complete"
@@ -370,7 +370,7 @@ auth_Cleanup:
         auth_ErrorDescription = "An error occurred while retrieving token." & vbNewLine
         If Err.Number - vbObjectError <> 11041 Then
             auth_ErrorDescription = auth_ErrorDescription & _
-                Err.Number & VBA.IIf(Err.Number < 0, " (" & VBA.LCase$(VBA.Hex$(Err.Number)) & ")", vbNullString) & ": "
+                Err.Number & IIf(Err.Number < 0, " (" & LCase$(Hex$(Err.Number)) & ")", vbNullString) & ": "
         End If
         auth_ErrorDescription = auth_ErrorDescription & Err.Description
 
@@ -385,7 +385,7 @@ End Function
 
 Private Function auth_LoginIsComplete(ByVal auth_IE As Object) As Boolean
     If Not auth_IE.Busy And auth_IE.ReadyState = 4 Then
-        auth_LoginIsComplete = VBA.InStr(1, auth_IE.LocationURL, Me.RedirectUrl)
+        auth_LoginIsComplete = InStr(1, auth_IE.LocationURL, Me.RedirectUrl)
     End If
 End Function
 

@@ -232,7 +232,7 @@ Public Function CreateBaseString(ByVal auth_Nonce As String, ByVal auth_Timestam
     Dim auth_Parameters() As String
     
     ' Add and sort parameters
-    auth_Parameters = VBA.Split(GetRequestParameters(auth_Client, auth_Request), "&")
+    auth_Parameters = Split(GetRequestParameters(auth_Client, auth_Request), "&")
     ReDim Preserve auth_Parameters(UBound(auth_Parameters) + 6)
     
     auth_Parameters(UBound(auth_Parameters) - 5) = "oauth_consumer_key=" & Me.ConsumerKey
@@ -243,7 +243,7 @@ Public Function CreateBaseString(ByVal auth_Nonce As String, ByVal auth_Timestam
     auth_Parameters(UBound(auth_Parameters)) = "oauth_version=1.0"
     
     auth_Parameters = SortParameters(auth_Parameters)
-    auth_Base = VBA.Join(auth_Parameters, "&")
+    auth_Base = Join(auth_Parameters, "&")
     
     CreateBaseString = WebHelpers.MethodToName(auth_Request.Method) & "&" & _
         WebHelpers.UrlEncode(GetRequestUrl(auth_Client, auth_Request)) & "&" & _
@@ -314,7 +314,7 @@ Public Function GetRequestParameters(ByVal auth_Client As WebClient, ByVal auth_
     Set auth_Parts = WebHelpers.GetUrlParts(auth_Client.GetFullUrl(auth_Request))
     
     ' Replace + for spaces with %20
-    GetRequestParameters = VBA.Replace(auth_Parts.Item("Querystring"), "+", "%20")
+    GetRequestParameters = Replace(auth_Parts.Item("Querystring"), "+", "%20")
 End Function
 
 ''
@@ -353,7 +353,7 @@ Private Function auth_CreateSigningKey() As String
 End Function
 
 Private Function auth_CreateTimestamp() As String
-    auth_CreateTimestamp = VBA.CStr(VBA.DateDiff("s", #1/1/1970#, WebHelpers.ConvertToUtc(VBA.Now)))
+    auth_CreateTimestamp = CStr(DateDiff("s", #1/1/1970#, WebHelpers.ConvertToUtc(Now)))
 End Function
 
 
