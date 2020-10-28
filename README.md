@@ -1,35 +1,31 @@
-VBA-Web
+VB6-Web
 =======
 
-VBA-Web (formerly Excel-REST) makes working with complex webservices and APIs easy with VBA on Windows and Mac. It includes support for authentication, automatically converting and parsing JSON, working with cookies and headers, and much more.
-
-<a href="https://www.patreon.com/timhall">
-  <img src="https://timhall.github.io/assets/donate-patreon@2x.png" width="217" alt="Donate">
-</a>
+VB6-Web (formerly Excel-REST) makes working with complex webservices and APIs easy with VBA on Windows and Mac. It includes support for authentication, automatically converting and parsing JSON, working with cookies and headers, and much more.
 
 Getting started
 ---------------
 
-- Download the [latest release (v4.1.6)](https://github.com/VBA-tools/VBA-Web/releases)
-- To install/upgrade in an existing file, use `VBA-Web - Installer.xlsm`
-- To start from scratch in Excel, `VBA-Web - Blank.xlsm` has everything setup and ready to go
+- Download the [latest release (v4.1.6)](https://github.com/BluejacketSoftware/VB6-Web/releases)
+- To install/upgrade in an existing file, use `VB6-Web - Installer.xlsm`
+- To start from scratch in Excel, `VB6-Web - Blank.xlsm` has everything setup and ready to go
 
-For more details see the [Wiki](https://github.com/VBA-tools/VBA-Web/wiki)
+For more details see the [Wiki](https://github.com/BluejacketSoftware/VB6-Web/wiki)
 
 Upgrading
 ---------
 
-To upgrade from Excel-REST to VBA-Web, follow the [Upgrading Guide](https://github.com/VBA-tools/VBA-Web/wiki/Upgrading-from-v3-to-v4)
+To upgrade from Excel-REST to VB6-Web, follow the [Upgrading Guide](https://github.com/BluejacketSoftware/VB6-Web/wiki/Upgrading-from-v3-to-v4)
 
-Note: XML support has been temporarily removed from VBA-Web while parser issues for Mac are resolved.
-XML support is still possible on Windows, follow [these instructions](https://github.com/VBA-tools/VBA-Web/wiki/XML-Support-in-4.0) to use a custom formatter.
+Note: XML support has been temporarily removed from VB6-Web while parser issues for Mac are resolved.
+XML support is still possible on Windows, follow [these instructions](https://github.com/BluejacketSoftware/VB6-Web/wiki/XML-Support-in-4.0) to use a custom formatter.
 
 Notes
 ---
 
-- Authentication support is built-in, with suppory for HTTP Basic, OAuth 1.0, OAuth 2.0, Windows, Digest, Google, and more. See [Authentication](https://github.com/VBA-tools/VBA-Web/wiki/Authentication) for more information
+- Authentication support is built-in, with suppory for HTTP Basic, OAuth 1.0, OAuth 2.0, Windows, Digest, Google, and more. See [Authentication](https://github.com/BluejacketSoftware/VB6-Web/wiki/Authentication) for more information
 - For proxy environments, `Client.EnabledAutoProxy = True` will automatically load proxy settings
-- Support for custom request and response formats. See [RegisterConverter](http://vba-tools.github.io/VBA-Web/docs/#/WebHelpers/RegisterConverter)
+- Support for custom request and response formats. See [RegisterConverter](http://BluejacketSoftware.github.io/VB6-Web/docs/#/WebHelpers/RegisterConverter)
 
 Examples
 -------
@@ -74,7 +70,7 @@ Public Sub ProcessDirections(Response As WebResponse)
 End Sub
 ```
 
-There are 3 primary components in VBA-Web:
+There are 3 primary components in VB6-Web:
 
 1. `WebRequest` for defining complex requests
 2. `WebClient` for executing requests
@@ -132,11 +128,11 @@ The above example demonstrates some of the powerful feature available with `WebR
 - Cookies
 - Headers
 
-For more details, see the `WebRequest` portion of the [Docs](https://vba-tools.github.io/VBA-Web/docs/)
+For more details, see the `WebRequest` portion of the [Docs](https://BluejacketSoftware.github.io/VB6-Web/docs/)
 
 ### Authentication Example
 
-The following example demonstrates using an authenticator with VBA-Web to query Twitter. The `TwitterAuthenticator` (found in the `authenticators/` [folder](https://github.com/VBA-tools/VBA-Web/tree/master/authenticators)) uses Twitter's OAuth 1.0a authentication and details of how it was created can be found in the [Wiki](https://github.com/VBA-tools/VBA-Web/wiki/Implementing-your-own-IAuthenticator).
+The following example demonstrates using an authenticator with VB6-Web to query Twitter. The `TwitterAuthenticator` (found in the `authenticators/` [folder](https://github.com/BluejacketSoftware/VB6-Web/tree/master/authenticators)) uses Twitter's OAuth 1.0a authentication and details of how it was created can be found in the [Wiki](https://github.com/BluejacketSoftware/VB6-Web/wiki/Implementing-your-own-IAuthenticator).
 
 ```VB.net
 Function QueryTwitter(Query As String) As WebResponse
@@ -166,13 +162,14 @@ Function QueryTwitter(Query As String) As WebResponse
 End Function
 ```
 
-For more details, check out the [Wiki](https://github.com/VBA-tools/VBA-Web/wiki), [Docs](https://vba-tools.github.com/VBA-Web/docs/), and [Examples](https://github.com/VBA-tools/VBA-Web/tree/master/examples)
+For more details, check out the [Wiki](https://github.com/BluejacketSoftware/VB6-Web/wiki), [Docs](https://BluejacketSoftware.github.com/VB6-Web/docs/), and [Examples](https://github.com/BluejacketSoftware/VB6-Web/tree/master/examples)
 
 ### Release Notes
 
-View the [changelog](https://github.com/VBA-tools/VBA-Web/blob/master/CHANGELOG.md) for release notes
+View the [changelog](https://github.com/BluejacketSoftware/VB6-Web/blob/master/CHANGELOG.md) for release notes
 
 ### About
 
-- Author: Tim Hall
+- Original Author: Tim Hall
+- Ported to VB6 by: Scott Reeves (Bluejacket Software)
 - License: MIT
