@@ -6,18 +6,11 @@ VB6-Web (formerly Excel-REST) makes working with complex webservices and APIs ea
 Getting started
 ---------------
 
-- Download the [latest release (v4.1.6)](https://github.com/BluejacketSoftware/VB6-Web/releases)
-- To install/upgrade in an existing file, use `VB6-Web - Installer.xlsm`
-- To start from scratch in Excel, `VB6-Web - Blank.xlsm` has everything setup and ready to go
-
 For more details see the [Wiki](https://github.com/BluejacketSoftware/VB6-Web/wiki)
 
-Upgrading
----------
+XML Support
+-----------
 
-To upgrade from Excel-REST to VB6-Web, follow the [Upgrading Guide](https://github.com/BluejacketSoftware/VB6-Web/wiki/Upgrading-from-v3-to-v4)
-
-Note: XML support has been temporarily removed from VB6-Web while parser issues for Mac are resolved.
 XML support is still possible on Windows, follow [these instructions](https://github.com/BluejacketSoftware/VB6-Web/wiki/XML-Support-in-4.0) to use a custom formatter.
 
 Notes
